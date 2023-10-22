@@ -1,0 +1,158 @@
+@use "./variables.scss" as *;
+
+@mixin light-theme {
+  --background-primary: #{$light-background-primary};
+  --background-secondary: #{$light-background-secondary};
+  --text-1: #{$light-text-1};
+  --text-2: #{$light-text-2};
+  --text-3: #{$light-text-3};
+  --button-secondary: #{$light-button-secondary};
+
+  --icon-fill: #{$light-text-2};
+  --icon-bg: #{$light-icon-background} none repeat scroll 0% 0%;
+  --icon-fg: #{$light-icon-foreground};
+  --hr-color: #{$light-text-4};
+  --hoverable-background: rgba(55, 53, 47, 0.08) none repeat scroll 0% 0%;
+
+  --input-background: rgba(255, 255, 255, 0.055);
+
+  --popup-shadow: rgba(15, 15, 15, 0.05) 0px 0px 0px 1px,
+    rgba(15, 15, 15, 0.1) 0px 3px 6px, rgba(15, 15, 15, 0.2) 0px 9px 24px;
+
+  --skeleton-bg: #{$light-skeleton-bg};
+  --skeleton: 255, 255, 255;
+
+  --scrollbar-track-bg: #edece9;
+  --scrollbar-thumb-bg: #d3d1cb;
+  --scrollbar-thumb-hover-bg: #aeaca6;
+
+  --light-gray: #{$light-light-gray};
+  --gray: #{$light-gray};
+  --brown: #{$light-brown};
+  --orange: #{$light-orange};
+  --yellow: #{$light-yellow};
+  --green: #{$light-green};
+  --blue: #{$light-blue};
+  --purple: #{$light-purple};
+  --pink: #{$light-pink};
+  --red: #{$light-red};
+
+  --danger: #{$danger};
+}
+
+@mixin dark-theme {
+  --background-primary: #{$dark-background-primary};
+  --background-secondary: #{$dark-background-secondary};
+  --text-1: #{$dark-text-1};
+  --text-2: #{$dark-text-2};
+  --text-3: #{$dark-text-3};
+  --button-secondary: #{$dark-button-secondary};
+
+  --icon-fill: #{$dark-text-2};
+  --icon-bg: #{$dark-icon-background} none repeat scroll 0% 0%;
+  --icon-fg: #{$dark-icon-foreground};
+  --hr-color: #{$dark-text-4};
+  --hoverable-background: rgba(255, 255, 255, 0.055) none repeat scroll 0% 0%;
+
+  --input-background: rgba(255, 255, 255, 0.055);
+
+  --popup-shadow: rgba(15, 15, 15, 0.1) 0px 0px 0px 1px,
+    rgba(15, 15, 15, 0.2) 0px 3px 6px, rgba(15, 15, 15, 0.4) 0px 9px 24px;
+
+  --skeleton-bg: #{$dark-skeleton-bg};
+  --skeleton: 0, 0, 0;
+
+  --scrollbar-track-bg: rgba(202, 204, 206, 0.04);
+  --scrollbar-thumb-bg: #474c50;
+  --scrollbar-thumb-hover-bg: rgba(202, 204, 206, 0.3);
+
+  --light-gray: #{$dark-light-gray};
+  --gray: #{$dark-gray};
+  --brown: #{$dark-brown};
+  --orange: #{$dark-orange};
+  --yellow: #{$dark-yellow};
+  --green: #{$dark-green};
+  --blue: #{$dark-blue};
+  --purple: #{$dark-purple};
+  --pink: #{$dark-pink};
+  --red: #{$dark-red};
+
+  --danger: #{$danger};
+}
+
+.light {
+  color-scheme: light;
+  @include light-theme;
+}
+
+.dark {
+  color-scheme: dark;
+  @include dark-theme;
+}
+
+@mixin hoverable {
+  // setting padding individually is better I think
+  // padding: 2px 10px 2px 10px;
+  border-radius: 3px;
+
+  &:hover {
+    background: var(--hoverable-background);
+  }
+}
+@mixin reset-button {
+  appearance: none;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+@mixin no-select {
+  user-select: none;
+}
+
+.button {
+  // 069ccd
+  @include reset-button();
+  user-select: none;
+  transition: background 20ms ease-in 0s;
+  // cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  white-space: nowrap;
+  height: 32px;
+  border-radius: 4px;
+  box-shadow: rgba(15, 15, 15, 0.1) 0px 0px 0px 1px inset,
+    rgba(15, 15, 15, 0.1) 0px 1px 2px;
+  background: rgb(35, 131, 226);
+  color: white;
+  fill: white;
+  line-height: 1.2;
+  padding-left: 12px;
+  padding-right: 12px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.button:hover {
+  background: rgb(0, 117, 211);
+}
+
+// Scrollbar
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar {
+  background: transparent;
+}
+::-webkit-scrollbar-track {
+  background: var(--scrollbar-track-bg);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb-bg);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--scrollbar-thumb-hover-bg);
+}

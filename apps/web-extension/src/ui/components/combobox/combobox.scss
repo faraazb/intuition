@@ -1,0 +1,200 @@
+.select,
+.combobox {
+  user-select: none;
+}
+
+.control {
+  width: 100%;
+  display: flex;
+  background: var(--input-background);
+  // box-shadow: rgba(255, 255, 255, 0.13) 0px -1px inset;
+  box-shadow: inset 0 0 0 1px #0f0f0f33;
+  border-radius: 3px;
+}
+
+.control > .toggle-button {
+  appearance: none;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  margin-left: auto;
+}
+
+.select > .control {
+  width: auto;
+  background: transparent;
+  border-radius: 4px;
+  cursor: pointer;
+  box-shadow: none;
+  // padding: 5px;
+}
+
+.select > .control:hover {
+  background: var(--hoverable-background);
+}
+
+// select an option or cerate one
+// .info {
+// 	display: flex;
+// 	padding-left: 14px;
+// 	padding-right: 14px;
+// 	margin-top: 6px;
+// 	margin-bottom: 8px;
+// 	color: rgba(255, 255, 255, 0.443);
+// 	font-size: 12px;
+// 	font-weight: 500;
+// 	line-height: 120%;
+// 	user-select: none;
+// }
+
+.tag-input {
+  width: 90%;
+  text-overflow: ellipsis;
+  display: flex;
+  padding: 5px;
+  column-gap: 5px;
+}
+
+.select .tag-input {
+  width: auto;
+}
+
+.select .tag-input > div {
+  display: flex;
+  column-gap: 4px;
+}
+
+.combobox.multi .tag-input {
+  flex-wrap: wrap;
+}
+
+.tag-input > input {
+  width: 100%;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--text-1);
+}
+
+.tags {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+.tag {
+  display: flex;
+  width: fit-content;
+  max-width: 95%;
+  column-gap: 3px;
+  align-items: center;
+  height: 20px;
+  border-radius: 3px;
+  padding-left: 6px;
+  padding-right: 6px;
+  font-size: 14px;
+  line-height: 120%;
+  white-space: nowrap;
+  color: var(--text-1);
+  margin: 0px;
+}
+
+.combo-list .tag > span {
+  overflow-x: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.remove-tag {
+  fill: var(--icon-fill);
+  height: 8px;
+  width: 8px;
+  opacity: 0.5;
+}
+
+.tag.default,
+.tag.light-gray {
+  background-color: var(--light-gray);
+}
+
+.tag.gray {
+  background-color: var(--gray);
+}
+
+.tag.brown {
+  background-color: var(--brown);
+}
+
+.tag.orange {
+  background-color: var(--orange);
+}
+
+.tag.yellow {
+  background-color: var(--yellow);
+}
+
+.tag.green {
+  background-color: var(--green);
+}
+
+.tag.blue {
+  background-color: var(--blue);
+}
+
+.tag.purple {
+  background-color: var(--purple);
+}
+
+.tag.pink {
+  background-color: var(--pink);
+}
+
+.tag.red {
+  background-color: var(--red);
+}
+
+.combo-list {
+  // width: 100%;
+  // position: absolute;
+  // overflow: scroll;
+  max-height: 180px;
+  width: 72%;
+  background-color: var(--background-primary);
+  color: var(--text-1);
+  border-radius: 4px;
+  list-style-type: none;
+
+  // max-width: calc(-24px + 100vw);
+  // overflow-x: hidden;
+  overflow-y: auto;
+  // width: 75%;
+}
+
+.combo-list[data-open="true"] {
+  box-shadow: var(--popup-shadow);
+  padding: 5px 0;
+  z-index: 10;
+}
+
+.combo-item {
+  padding: 5px;
+  user-select: none;
+  transition: background 20ms ease-in 0s;
+  cursor: pointer;
+  margin-left: 4px;
+  margin-right: 4px;
+  border-radius: 3px;
+}
+
+.combo-item.highlight {
+  background: var(--hoverable-background);
+}
+
+.select .combo-item {
+  display: flex;
+  align-items: center;
+
+  .icon {
+    margin-left: auto;
+  }
+}

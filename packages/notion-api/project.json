@@ -1,0 +1,49 @@
+{
+  "name": "notion-api",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/notion-api/src",
+  "projectType": "library",
+  "targets": {
+    "dev": {
+      "executor": "@nx/vite:build",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "buildTarget": "build",
+        "outputPath": "{projectRoot}/dist",
+        "mode": "development",
+        "watch": true,
+        "sourcemap": true
+      }
+    },
+    "build": {
+      "executor": "@nx/vite:build",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/packages/notion-api"
+      }
+    },
+    "publish": {
+      "command": "node tools/scripts/publish.mjs notion-api {args.ver} {args.tag}",
+      "dependsOn": ["build"]
+    },
+    "test": {
+      "executor": "@nx/vite:test",
+      "outputs": ["{options.reportsDirectory}"],
+      "options": {
+        "passWithNoTests": true,
+        "reportsDirectory": "../../coverage/packages/notion-api"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": [
+          "packages/notion-api/**/*.ts",
+          "packages/notion-api/package.json"
+        ]
+      }
+    }
+  },
+  "tags": []
+}

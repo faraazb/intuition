@@ -1,0 +1,50 @@
+{
+  "name": "web-extension",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "web-extension/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "dev": {
+      "executor": "@nx/vite:dev-server",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "buildTarget": "build",
+        "outputPath": "dist/apps/web-extension/chromium",
+        "mode": "development",
+        "sourcemap": true
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["web-extension/**/*.{ts,tsx,js,jsx}"]
+      }
+    },
+    "build": {
+      "executor": "@nx/vite:build",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "configurations": {
+        "development": {
+          "mode": "development",
+          "outputPath": "build/apps/web-extension/development"
+        },
+        "production": {
+          "mode": "production",
+          "outputPath": "build/apps/web-extension/production",
+          "sourcemap": true
+        }
+      }
+    },
+    "test": {
+      "executor": "@nx/vite:test",
+      "outputs": ["{options.reportsDirectory}"],
+      "options": {
+        "passWithNoTests": true,
+        "reportsDirectory": "../../coverage/web-extension"
+      }
+    }
+  }
+}

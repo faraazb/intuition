@@ -1,0 +1,15 @@
+{
+  "name": "@intuition/web-extension",
+  "version": "0.5.0",
+  "displayName": "Intuition for Notion",
+  "author": {
+    "name": "Faraaz Biyabani",
+    "email": "faraazb@protonmail.com"
+  },
+  "description": "An intuitive web clipper for Notion",
+  "dependencies": {
+    "@intuition/notion-api": "*",
+    "@intuition/notion-ui": "*"
+  },
+  "license": "MIT"
+}

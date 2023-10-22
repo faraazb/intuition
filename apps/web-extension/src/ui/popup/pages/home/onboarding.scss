@@ -1,0 +1,17 @@
+#onboarding {
+  padding: 15px 30px;
+  display: grid;
+  grid-template-rows: [title] auto 10px [content] auto 20px [footer] auto;
+}
+
+.help {
+  grid-row-start: content;
+  color: var(--text-2);
+}
+
+.action {
+  grid-row-start: footer;
+  cursor: pointer;
+  color: var(--button-secondary);
+  font-size: 1.1rem;
+}

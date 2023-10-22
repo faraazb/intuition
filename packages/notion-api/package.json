@@ -1,0 +1,19 @@
+{
+  "name": "@intuition/notion-api",
+  "version": "0.0.1",
+  "dependencies": {},
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "typings": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "author": {
+    "name": "Faraaz Biyabani",
+    "email": "faraazb@protonmail.com"
+  }
+}

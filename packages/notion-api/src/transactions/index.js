@@ -1,0 +1,1 @@
+export { createPageInCollection } from "./createPageInCollection";

@@ -1,0 +1,119 @@
+@use "@intuition/notion-ui/styles/_theme.scss" as theme;
+
+#spaces {
+  font-size: 14px;
+  color: var(--text-1);
+
+  display: flex;
+  flex-direction: column;
+  row-gap: 5px;
+  padding: 10px 0;
+}
+
+.title-container {
+  padding: 0 10px;
+}
+
+.user-email {
+  font-size: 11px;
+  line-height: 16px;
+  font-weight: 500;
+  color: var(--text-2);
+  padding: 10px;
+}
+
+.workspaces {
+  display: flex;
+  flex-direction: column;
+  row-gap: 5px;
+}
+
+.user-workspace {
+  display: flex;
+  flex-direction: column;
+  row-gap: 5px;
+
+  @include theme.hoverable;
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+.workspace {
+  // display: flex;
+  // column-gap: 2px;
+  cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  @include theme.hoverable;
+  padding: 4px 10px;
+
+  display: grid;
+  grid-template-rows: [row1] 1fr [row2] 1fr [end];
+  grid-template-columns: [col1] minmax(0, 32px) [col2] auto [col3] 20px [end];
+
+  align-items: center;
+  column-gap: 10px;
+  // row-gap: 2px;
+}
+
+.workspace-icon {
+  @include theme.no-select;
+  grid-row: row1 / end;
+  // place-self: center;
+  // display: block;
+  // object-fit: cover;
+  border-radius: 3px;
+  width: 32px;
+  height: 32px;
+  transition: opacity 100ms ease-out 0s;
+}
+
+.workspace-icon-letter {
+  @include theme.no-select;
+  grid-row: row1 / end;
+  // place-self: center;
+  border-radius: 3px;
+  width: 32px;
+  height: 32px;
+  background: var(--icon-bg);
+  color: var(--icon-fg);
+
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  & > span {
+    line-height: 1;
+    font-size: 22px;
+    height: 22px;
+  }
+}
+
+.workspace-name {
+  grid-row-start: row1;
+  grid-column-start: col2;
+  line-height: 20px;
+  color: var(--text-1);
+  // white-space: nowrap;
+  // overflow: hidden;
+  // text-overflow: ellipsis;
+}
+
+.workspace-plan {
+  grid-row-start: 2;
+  grid-column-start: 2;
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--text-2);
+  // white-space: nowrap;
+  // overflow: hidden;
+  // text-overflow: ellipsis;
+}
+
+.workspace-check {
+  grid-row: row1 / end;
+  grid-column-start: col3;
+}

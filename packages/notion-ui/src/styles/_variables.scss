@@ -1,0 +1,51 @@
+$white: #fff;
+$black: #000;
+
+// $light-background-primary: #f7f6f3;
+$light-background-primary: $white;
+$light-background-secondary: rgb(37, 37, 37);
+$light-text-1: rgb(55, 53, 47);
+$light-text-2: rgba(55, 53, 47, 0.65);
+$light-text-3: rgba(55, 53, 47, 0.45);
+$light-text-4: rgba(55, 53, 47, 0.16);
+$light-skeleton-bg: #dddbdd;
+
+$light-light-gray: rgba(227, 226, 224, 0.5);
+$light-gray: rgb(227, 226, 224);
+$light-brown: rgb(238, 224, 218);
+$light-orange: rgb(250, 222, 201);
+$light-yellow: rgb(253, 236, 200);
+$light-green: rgb(219, 237, 219);
+$light-blue: rgb(211, 229, 239);
+$light-purple: rgb(232, 222, 238);
+$light-pink: rgb(245, 224, 233);
+$light-red: rgb(255, 226, 221);
+
+$light-button-secondary: rgb(46, 170, 220);
+$light-icon-background: rgb(137, 137, 137);
+$light-icon-foreground: rgba(255, 255, 255, 0.9);
+
+$dark-background-primary: #202020;
+$dark-background-secondary: rgb(37, 37, 37);
+$dark-text-1: rgba(255, 255, 255, 0.81);
+$dark-text-2: rgba(255, 255, 255, 0.65);
+$dark-text-3: rgba(255, 255, 255, 0.443);
+$dark-text-4: rgba(255, 255, 255, 0.16);
+$dark-skeleton-bg: #505050;
+
+$dark-light-gray: rgb(55, 55, 55);
+$dark-gray: rgb(90, 90, 90);
+$dark-brown: rgb(96, 59, 44);
+$dark-orange: rgb(133, 76, 29);
+$dark-yellow: rgb(137, 99, 42);
+$dark-green: rgb(43, 89, 63);
+$dark-blue: rgb(40, 69, 108);
+$dark-purple: rgb(73, 47, 100);
+$dark-pink: rgb(105, 49, 76);
+$dark-red: rgb(110, 54, 48);
+
+$dark-button-secondary: rgb(46, 170, 220);
+$dark-icon-background: rgb(137, 137, 137);
+$dark-icon-foreground: rgb(211, 211, 211);
+
+$danger: rgb(235, 87, 87);

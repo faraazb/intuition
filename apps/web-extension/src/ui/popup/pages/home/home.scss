@@ -1,0 +1,178 @@
+@use "@intuition/notion-ui/styles/_theme.scss" as theme;
+
+#home {
+  font-size: 14px;
+  color: var(--text-1);
+}
+
+.space {
+  display: flex;
+  column-gap: 10px;
+  align-items: center;
+  height: 40px;
+  // body 2px + hoverable 10px + settings 8px
+  padding: 10px 20px;
+  cursor: pointer;
+}
+
+.space:not(.skeleton-container) {
+  @include theme.hoverable;
+}
+
+.space-icon {
+  height: 18px;
+  width: 18px;
+  border-radius: 3px;
+}
+
+.space-icon-letter {
+  border-radius: 3px;
+  width: 18px;
+  height: 18px;
+  background: var(--icon-bg);
+  color: var(--icon-fg);
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  & > span {
+    line-height: 1;
+    font-size: 12px;
+    height: 12px;
+  }
+}
+
+.user {
+  display: flex;
+  flex-direction: column;
+  row-gap: 1px;
+}
+
+.user > .email {
+  font-size: 11px;
+  color: var(--text-3);
+}
+
+.user.skeleton {
+  height: 20px;
+  width: 150px;
+}
+
+.settings {
+  padding: 8px;
+}
+
+.settings-button {
+  @include theme.reset-button;
+  color: var(--text-2);
+  display: flex;
+  column-gap: 10px;
+  align-items: center;
+}
+
+.search {
+  padding: 8px;
+}
+
+.search-bar {
+  padding: 2px 10px;
+  display: flex;
+  column-gap: 10px;
+  align-items: center;
+}
+
+.search-bar > .search-input {
+  width: 100%;
+}
+
+.search-input {
+  display: flex;
+  align-items: center;
+  column-gap: 10px;
+  font-size: 14px;
+  line-height: 20px;
+  padding: 4px 10px;
+  position: relative;
+  border-radius: 3px;
+  box-shadow: rgba(15, 15, 15, 0.2) 0px 0px 0px 1px inset;
+  background: var(--input-background);
+  color: var(--text-1);
+  cursor: text;
+}
+
+// TODO standardise input
+.search-input > input {
+  font: inherit;
+  line-height: inherit;
+  border: medium none;
+  background: none;
+  fill: currentcolor;
+  width: 100%;
+  display: block;
+  resize: none;
+  padding: 0;
+  color: inherit;
+  margin: 0;
+}
+
+.search-input > input:focus {
+  outline: 0;
+}
+
+.collections-loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  // TODO height relative to html, body doesn't work
+  // width: 100%;
+  // height: 100%;
+  min-height: 40px;
+}
+
+.collections-loading > .loading-spinner {
+  height: 1.3em;
+  width: 1.3em;
+}
+
+.collections {
+  max-height: 200px;
+  overflow: auto;
+}
+
+.collection {
+  padding: 4px;
+}
+
+.skeleton {
+  // display: inline-block;
+  // height: 1em;
+  position: relative;
+  overflow: hidden;
+  // background-color: #DDDBDD;
+  background-color: var(--skeleton-bg);
+
+  &::after {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    transform: translateX(-100%);
+    background-image: linear-gradient(
+      90deg,
+      rgba(var(--skeleton), 0) 0,
+      rgba(var(--skeleton), 0.2) 20%,
+      rgba(var(--skeleton), 0.5) 60%,
+      rgba(var(--skeleton), 0) 0
+    );
+    animation: shimmer 2s infinite;
+    content: "";
+  }
+
+  @keyframes shimmer {
+    100% {
+      transform: translateX(100%);
+    }
+  }
+}

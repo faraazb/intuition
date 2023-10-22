@@ -1,0 +1,28 @@
+{
+  "name": "@intuition/notion-ui",
+  "version": "0.0.1",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    },
+    "./style.css": {
+      "import": "./dist/style.css",
+      "require": "./dist/style.css"
+    },
+    "./styles/_theme.scss": {
+      "import": "./dist/styles/_theme.scss",
+      "require": "./dist/styles/_theme.scss"
+    },
+    "./styles/_variables.scss": {
+      "import": "./dist/styles/_variables.scss",
+      "require": "./dist/styles/_variables.scss"
+    },
+    "./styles/_typography.scss": {
+      "import": "./dist/styles/_typography.scss",
+      "require": "./dist/styles/_typography.scss"
+    }
+  }
+}

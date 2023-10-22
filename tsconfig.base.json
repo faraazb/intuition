@@ -1,0 +1,24 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "rootDir": ".",
+    "sourceMap": true,
+    "declaration": false,
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "target": "es2015",
+    "module": "esnext",
+    "lib": ["es2020", "dom"],
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
+    "baseUrl": ".",
+    "paths": {
+      "@intuition/notion-api": ["packages/notion-api/src/index.js"],
+      "@intuition/notion-ui": ["packages/notion-ui/src/index.js"],
+      "web-extension": ["apps/web-extension/src/manifest.js"]
+    }
+  },
+  "exclude": ["node_modules", "tmp"]
+}
