@@ -1,10 +1,11 @@
 import { useNavigate } from "react-router-dom";
-import { CheckIcon } from "../../../components/icons";
+import { CheckIcon } from "@intuition/notion-ui";
 import "./spaces.scss";
 import {
   useGetSpaceQuery,
   useGetSpacesQuery,
   useGetUsersQuery,
+  useSetSpaceMutation,
 } from "../../store/api/notion";
 
 export const Spaces = () => {
@@ -13,21 +14,13 @@ export const Spaces = () => {
   const { data: spaces, isSuccess: isSpacesSuccess } = useGetSpacesQuery();
   const { data: currentSpace, isSuccess: isCurrentSpaceSuccess } =
     useGetSpaceQuery();
-  // const { data: currentUser } = useGetUserQuery();
-
-  // let notionSpaces = [];
-  // users.forEach((user) => {
-  // 	let workspaces = spaces.filter((space) =>
-  // 		space.for_users.includes(user.id)
-  // 	);
-  // 	notionSpaces.push({ user, workspaces });
-  // });
+  const [setSpace] = useSetSpaceMutation();
 
   const handleSpaceChange = (event, spaceId, userId) => {
     event.preventDefault();
     if (currentSpace.id !== spaceId) {
       console.log("Change space triggered by ", userId, " to ", spaceId);
-      // changeSpace(spaceId, userId).then(history.back());
+      setSpace({ userId, spaceId })
     }
   };
 

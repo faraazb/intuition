@@ -26,6 +26,10 @@ export const background = createApi({
     getSpace: build.query({
       queryFn: async () => await sendMessage({ action: "getSpace" }),
     }),
+    setSpace: build.mutation({
+      queryFn: async ({ userId, spaceId }) =>
+        await sendMessage({ action: "setSpace", payload: { userId, spaceId } }),
+    }),
     getSpaces: build.query({
       queryFn: async () => await sendMessage({ action: "getSpaces" }),
     }),
@@ -64,6 +68,7 @@ export const {
   useGetUsersQuery,
   useGetUserQuery,
   useGetSpacesQuery,
+  useSetSpaceMutation,
   useGetSpaceQuery,
   useGetRecentCollectionsQuery,
   useGetCollectionQuery,
