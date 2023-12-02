@@ -29,11 +29,17 @@ export const Collection = () => {
       { skip: !isSpaceSuccess }
     );
 
-  const [createPageInCollection, {isLoading: isPageLoading, isSuccess: isPageSuccess, isError: isPageError}] = useCreatePageInCollectionMutation();
+  const [
+    createPageInCollection,
+    {
+      isLoading: isPageLoading,
+      isSuccess: isPageSuccess,
+      isError: isPageError,
+    },
+  ] = useCreatePageInCollectionMutation();
   const [message, setMessage] = useState();
   const navigate = useNavigate();
   const methods = useForm();
-
 
   useEffect(() => {
     (async () => {
@@ -85,8 +91,7 @@ export const Collection = () => {
         const isSelect = type === "select" || type === "status";
         if (isSelect && value.value) {
           fieldValue = value.value;
-        }
-        else if (type === "multi_select") {
+        } else if (type === "multi_select") {
           fieldValue = value.map((v) => v.value);
         }
         row[normalizedIdsMirror[id]] = {
@@ -129,9 +134,9 @@ export const Collection = () => {
       setMessage({ text: "Failed to add to Notion!", intent: "danger" });
     }
     if (isPageSuccess) {
-      navigate("/saved")
+      navigate("/saved");
     }
-  }, [isPageLoading, isPageSuccess, isPageError])
+  }, [isPageLoading, isPageSuccess, isPageError]);
 
   return (
     <FormProvider {...methods}>
@@ -141,7 +146,11 @@ export const Collection = () => {
             <div className="header">
               <div className="title">
                 <div className="header-2">{collection.name[0]}</div>
-                <button className="action-button" onClick={() => navigate(-1)}>
+                <button
+                  className="action-button"
+                  onClick={() => navigate(-1)}
+                  type="button"
+                >
                   Back
                 </button>
               </div>
