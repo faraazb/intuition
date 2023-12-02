@@ -86,10 +86,10 @@ async function getUser() {
   }
 
   if (!userId || !users) {
-    return { error: { name: "NOT_LOGGED_IN" } };
+    return { error: { message: "not logged in" } };
   }
   if (!(userId in users)) {
-    return { error: { name: "USER_NOT_FOUND" } };
+    return { error: { message: "user not found" } };
   }
 
   return users[userId];
@@ -102,7 +102,7 @@ async function getSpace() {
     const user = await getUser();
     const users = await getUsers();
     if (!user.id || !spaces || !users) {
-      return { error: { name: "NO_SPACE" } };
+      return { error: { message: "no spaces found" } };
     }
     const spaceIds = users[user.id]?.spaces;
     return spaces[spaceIds[0]];
@@ -112,7 +112,7 @@ async function getSpace() {
 
 async function setSpace({ userId, spaceId }) {
   if (!spaceId) {
-    return { error: { name: `provide spaceId` } };
+    return { error: { message: "provide spaceId" } };
   }
   await browser.storage.local.set({
     notion_space: spaceId,
@@ -180,7 +180,7 @@ async function searchCollections({ query, spaceId, limit }) {
   const collections = {};
   const response = await client.searchCollections({ query, spaceId, limit });
   if (!response.total) {
-    return { error: "No results found" };
+    return { error: { message: "No results found" } };
   }
   const recordMapCollections = response?.recordMap?.collection;
   response.results.forEach((result) => {
@@ -230,13 +230,15 @@ browser.runtime.onMessage.addListener(
         .then((v) => sendResponse(v.error ? v : { data: v }))
         .catch((error) => {
           console.error(error);
-          sendResponse({ error: error.message, internal: true });
+          sendResponse({
+            error: { message: error.message },
+            internal: true,
+          });
         });
       // keep messaging channel open (hack for Chromium)
       // on Firefox promises can be returned directly
       return true;
     }
-    sendResponse({ error: "unknown action" });
-    return true;
+    sendResponse({ error: { message: "unknown action" } });
   }
 );

@@ -104,7 +104,7 @@ export const Saved = () => {
       </div>
       <div className="save-message">Saved!</div>
       <div>
-        <Link href="/">
+        <Link to="/">
           <button className="action-button">Back to Home</button>
         </Link>
       </div>
