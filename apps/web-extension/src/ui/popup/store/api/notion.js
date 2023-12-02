@@ -17,6 +17,7 @@ const sendQueryMessage = () => sendMessage;
 export const background = createApi({
   reducerPath: "notion",
   baseQuery: retry(sendMessage),
+  tagTypes: ["Space"],
   endpoints: (build) => ({
     getUser: build.query({
       query: () => ({ action: "getUser" }),
@@ -26,12 +27,14 @@ export const background = createApi({
     }),
     getSpace: build.query({
       query: () => ({ action: "getSpace" }),
+      providesTags: ["Space"],
     }),
     setSpace: build.mutation({
       query: ({ userId, spaceId }) => ({
         action: "setSpace",
         payload: { userId, spaceId },
       }),
+      invalidatesTags: ["Space"],
     }),
     getSpaces: build.query({
       query: () => ({ action: "getSpaces" }),
