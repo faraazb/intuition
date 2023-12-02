@@ -1,65 +1,64 @@
-import { createApi, fakeBaseQuery } from "@reduxjs/toolkit/query/react";
+import { createApi, retry } from "@reduxjs/toolkit/query/react";
 
 const browser = chrome;
 
 const sendMessage = async ({ action, payload }) => {
   try {
     const response = await browser.runtime.sendMessage({ action, payload });
-    // console.log(response)
     return response;
   } catch (error) {
-    console.log("From popup", error);
-    return { error };
+    console.error("Intuition:", error);
+    return { error: { data: { message: error.message } } };
   }
 };
 
+const sendQueryMessage = () => sendMessage;
+
 export const background = createApi({
   reducerPath: "notion",
-  baseQuery: fakeBaseQuery,
+  baseQuery: retry(sendMessage),
   endpoints: (build) => ({
     getUser: build.query({
-      queryFn: async () => await sendMessage({ action: "getUser" }),
+      query: () => ({ action: "getUser" }),
     }),
     getUsers: build.query({
-      queryFn: async () => await sendMessage({ action: "getUsers" }),
+      query: () => ({ action: "getUsers" }),
     }),
     getSpace: build.query({
-      queryFn: async () => await sendMessage({ action: "getSpace" }),
+      query: () => ({ action: "getSpace" }),
     }),
     setSpace: build.mutation({
-      queryFn: async ({ userId, spaceId }) =>
-        await sendMessage({ action: "setSpace", payload: { userId, spaceId } }),
+      query: ({ userId, spaceId }) => ({
+        action: "setSpace",
+        payload: { userId, spaceId },
+      }),
     }),
     getSpaces: build.query({
-      queryFn: async () => await sendMessage({ action: "getSpaces" }),
+      query: () => ({ action: "getSpaces" }),
     }),
     getRecentCollections: build.query({
-      queryFn: async ({ userId, spaceId }) =>
-        await sendMessage({
-          action: "getRecentCollections",
-          payload: { userId, spaceId },
-        }),
+      query: ({ userId, spaceId }) => ({
+        action: "getRecentCollections",
+        payload: { userId, spaceId },
+      }),
     }),
     getCollection: build.query({
-      queryFn: async ({ id, spaceId }) =>
-        await sendMessage({
-          action: "getCollection",
-          payload: { id, spaceId },
-        }),
+      query: ({ id, spaceId }) => ({
+        action: "getCollection",
+        payload: { id, spaceId },
+      }),
     }),
     createPageInCollection: build.mutation({
-      queryFn: async ({ userId, spaceId, collectionId, properties }) =>
-        await sendMessage({
-          action: "createPageInCollection",
-          payload: { userId, spaceId, collectionId, properties },
-        }),
+      query: ({ userId, spaceId, collectionId, properties }) => ({
+        action: "createPageInCollection",
+        payload: { userId, spaceId, collectionId, properties },
+      }),
     }),
     searchCollections: build.query({
-      queryFn: async ({query, spaceId, limit}) => 
-        await sendMessage({
-          action: "searchCollections",
-          payload: { query, spaceId, limit },
-        })
+      query: ({ query, spaceId, limit }) => ({
+        action: "searchCollections",
+        payload: { query, spaceId, limit },
+      }),
     }),
   }),
 });

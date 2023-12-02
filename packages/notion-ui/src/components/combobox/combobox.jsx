@@ -256,6 +256,7 @@ const MultiCombobox = ({ items: itemsList = [], getFilter, onChange, onBlur, nam
         case useMultipleSelection.stateChangeTypes.DropdownKeyDownBackspace:
         case useMultipleSelection.stateChangeTypes.FunctionRemoveSelectedItem:
           setSelectedItems(newSelectedItems);
+          onChange(newSelectedItems);
           break;
         default:
           break;
@@ -304,7 +305,6 @@ const MultiCombobox = ({ items: itemsList = [], getFilter, onChange, onBlur, nam
             let newSelectedItems = [...selectedItems, newSelectedItem];
             setSelectedItems(newSelectedItems);
             // call parent onchange
-            console.log(newSelectedItems)
             onChange(newSelectedItems);
           }
           break;

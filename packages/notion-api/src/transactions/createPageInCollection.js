@@ -14,12 +14,21 @@ export function createPageInCollection({
     let val = value;
     if (type === "checkbox") {
       val = value ? ["Yes"] : ["No"];
-    } else if (type === "date") {
+    } 
+    else if (type === "date") {
       // ‣ this is a right triangle, don't know why it's required
       val = ["‣", [["d", { start_date: value, type: "date" }]]];
-    } else if (type === "multi_select") {
+    } 
+    else if (type === "multi_select") {
       val = [value.join()];
-    } else {
+    } 
+    else if (type === "title") {
+      val = [value, [["b"]]]
+    } 
+    else if (type === "url") {
+      val = [value, [["a", value]]]
+    } 
+    else {
       val = [value];
     }
     properties[property] = [val];
@@ -34,6 +43,22 @@ export function createPageInCollection({
         args: {
           id: pointerId,
           space_id: spaceId,
+          type: "page",
+          version: 1,
+          // contents: [],
+          // is_template: false,
+          // isBookmarked: false,
+        },
+        pointer: {
+          id: pointerId,
+          spaceId,
+          table: "block",
+        },
+      },
+      {
+        command: "update",
+        path: [],
+        args: {
           created_by_id: userId,
           last_edited_by_id: userId,
           created_by_table: "notion_user",
@@ -41,7 +66,6 @@ export function createPageInCollection({
           created_time: time,
           last_edited_time: time,
           properties,
-          type: "page",
           // contents: [],
           // is_template: false,
           // isBookmarked: false,
@@ -64,6 +88,13 @@ export function createPageInCollection({
           parentId: collectionId,
           parentTable: "collection",
         },
+        additionalUpdatedPointer: [
+          {
+            id: pointerId,
+            spaceId,
+            table: "block",
+          }
+        ],
       },
     ],
     spaceId,

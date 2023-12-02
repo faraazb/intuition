@@ -72,7 +72,7 @@ export class NotionClient {
 
     const body = {
       requestId: v4(),
-      transaction: [
+      transactions: [
         Transactions.createPageInCollection({
           userId,
           spaceId,
@@ -85,7 +85,7 @@ export class NotionClient {
     const response = await this.client("saveTransactions", {
       json: body,
     });
-
+    
     if (!response.ok) {
       throw new NotionClientError({ response });
     }

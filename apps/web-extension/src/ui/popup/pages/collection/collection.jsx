@@ -13,8 +13,6 @@ import { MultiSelectField } from "~/ui/components/fields/multi-select-field";
 import { FormProvider, useForm } from "react-hook-form";
 import { CollectionField } from "~/ui/components/collection-field/collection-field";
 
-// let NUMBER_PATTERN = /[^0-9.]/g;
-
 const browser = chrome;
 
 export const Collection = () => {
@@ -31,14 +29,11 @@ export const Collection = () => {
       { skip: !isSpaceSuccess }
     );
 
-  const [createPageInCollection, result] = useCreatePageInCollectionMutation();
+  const [createPageInCollection, {isLoading: isPageLoading, isSuccess: isPageSuccess, isError: isPageError}] = useCreatePageInCollectionMutation();
   const [message, setMessage] = useState();
   const navigate = useNavigate();
   const methods = useForm();
 
-  const handleTempClick = () => {
-    console.log(methods.getValues());
-  };
 
   useEffect(() => {
     (async () => {
@@ -80,19 +75,26 @@ export const Collection = () => {
 
   const createRow = (data) => {
     let row = {};
-    Object.entries(data).forEach(([id, value]) => {
-      // TODO check empty, NaN, etc. rn unchecked checkbox will never make it
+    for (const [id, value] of Object.entries(data)) {
       if (value) {
+        let fieldValue = value;
         const type = collection.schema[normalizedIdsMirror[id]].type;
-        const isSelectLike =
-          type === "select" || type === "multi_select" || type === "status";
+        if (type === "date" && fieldValue.toString() === "Invalid Date") {
+          continue;
+        }
+        const isSelect = type === "select" || type === "status";
+        if (isSelect && value.value) {
+          fieldValue = value.value;
+        }
+        else if (type === "multi_select") {
+          fieldValue = value.map((v) => v.value);
+        }
         row[normalizedIdsMirror[id]] = {
           type,
-          value: isSelectLike ? value.value : value,
+          value: fieldValue,
         };
       }
-    });
-    console.log(row);
+    }
     return row;
   };
 
@@ -100,6 +102,19 @@ export const Collection = () => {
     const row = createRow(data);
 
     try {
+      createPageInCollection({
+        userId: user.id,
+        spaceId: space.id,
+        collectionId: id,
+        properties: row,
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    if (isPageLoading) {
       setMessage({
         text: (
           <>
@@ -109,25 +124,19 @@ export const Collection = () => {
         ),
         intent: "info",
       });
-      await createPageInCollection({
-        userId: user.id,
-        spaceId: space.id,
-        collectionId: id,
-        properties: row,
-      });
-      // navigate("/saved");
-    } catch (error) {
-      console.error(error);
+    }
+    if (isPageError) {
       setMessage({ text: "Failed to add to Notion!", intent: "danger" });
     }
-  };
-
-  console.log("Collections rendered", collection);
+    if (isPageSuccess) {
+      navigate("/saved")
+    }
+  }, [isPageLoading, isPageSuccess, isPageError])
 
   return (
     <FormProvider {...methods}>
       {isCollectionSuccess && Object.keys(normalizedIds).length ? (
-        <form onSubmit={methods.handleSubmit(createRow)}>
+        <form onSubmit={methods.handleSubmit(addToNotion)}>
           <div className="collection">
             <div className="header">
               <div className="title">
@@ -151,7 +160,7 @@ export const Collection = () => {
                   return (
                     <CollectionField
                       key={id}
-                      id={id}
+                      id={normalizedIds[id]}
                       name={name}
                       type={type}
                       tab={tab}
@@ -181,7 +190,7 @@ export const Collection = () => {
                   return (
                     <CollectionField
                       key={id}
-                      id={id}
+                      id={normalizedIds[id]}
                       name={name}
                       type={type}
                       tab={tab}

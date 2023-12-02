@@ -14,7 +14,6 @@ export const Onboarding = () => {
         action: "getCookie",
         payload: { name: "notion_user_id" },
       });
-      console.log(cookie);
       if (cookie?.data) {
         navigate("/");
       } else {

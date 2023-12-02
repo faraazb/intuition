@@ -7,6 +7,6 @@ if (import.meta.hot && typeof window !== "undefined") {
     window.$RefreshSig$ = () => (type) => type;
     window.__vite_plugin_react_preamble_installed__ = true;
   } catch (err) {
-    console.log("Hello world", err);
+    console.log("React referesh:", err);
   }
 }

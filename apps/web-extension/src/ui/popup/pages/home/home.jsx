@@ -34,13 +34,6 @@ function useDebounce(value, delay) {
 }
 
 export const Home = () => {
-  // const {
-  // 	space,
-  // 	user,
-  // 	users,
-  // 	collections: allCollections,
-  // 	setCollections: setAllCollections,
-  // } = useContext(NotionContext);
   const navigate = useNavigate();
 
   const { data: users, isSuccess: isUsersSuccess } = useGetUsersQuery();
@@ -71,10 +64,6 @@ export const Home = () => {
       }
     );
 
-  useEffect(() => {
-    console.log(isSpaceSuccess, isUserSuccess);
-  }, [isSpaceSuccess, isUserSuccess]);
-
   const setSearchCollectionsQuery = async (event) => {
     const query = event.target.value;
     setCollectionsQuery(query);
@@ -86,28 +75,12 @@ export const Home = () => {
   // 	return `https://notion-emojis.s3-us-west-2.amazonaws.com/prod/svg-twitter/${unicode}-fe0f.svg`;
   // };
 
-  // useEffect(() => {
-  // 	if (currentUser?.id && users && spaces) {
-  // 		const nextUser = users[currentUser.id] ?? null;
-  // 		const nextSpace = (nextUser && nextUser?.spaces?.length) ?
-  // 			spaces[currentSpace?.id ?? nextUser.spaces[0]] : null;
-  // 		setUser(nextUser)
-  // 		setSpace(nextSpace)
-  // 	}
-  // }, [currentUser, currentSpace, users, spaces])
-
-  useEffect(() => {
-    console.log("Home finished rendering");
-  }, []);
-
   let collections = {};
   if (collectionsQuery && isSearchedCollectionsSuccess) {
     collections = searchedCollections;
   } else if (isRecentCollectionSuccess) {
     collections = recentCollections;
   }
-
-  console.log(collections)
 
   return (
     <div id="home">

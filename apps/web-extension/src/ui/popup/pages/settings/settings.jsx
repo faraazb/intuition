@@ -27,7 +27,7 @@ export const Settings = () => {
   const dispatch = useDispatch();
 
   const onThemeChange = async (nextTheme) => {
-    console.log(nextTheme);
+    
     try {
       dispatch(setTheme(nextTheme));
       await browser.storage.local.set({ theme: nextTheme });

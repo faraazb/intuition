@@ -1,4 +1,3 @@
-// import { Notion } from "../api/notion";
 import { NotionClient } from "@intuition/notion-api";
 import "../hmr/enableDevHmr";
 
@@ -8,7 +7,6 @@ const browser = chrome;
 
 // TODO Better error handling
 chrome.runtime.onInstalled.addListener(() => {
-  console.log("Extension installed");
   chrome.storage.local.get("theme").then((result) => {
     if (!result.theme) {
       chrome.storage.local.set({
@@ -24,7 +22,6 @@ async function getCookie({ name, ...rest }) {
     url: "https://www.notion.so/",
     ...rest,
   });
-  // console.log(cookie)
   if (cookie) return cookie.value;
 }
 
@@ -33,28 +30,8 @@ let client;
 (async function () {
   const token = await getCookie({ name: "token_v2" });
   const userId = await getCookie({ name: "notion_user_id" });
-
   client = new NotionClient({ token, userId });
-
-  // console.log(await getRecentCollections({spaceId: "a99691de-ae21-4802-bd1d-9cb351aaa53c", userId}))
-
-  // const response = await client.getSpaces()
-  // console.log(response)
-
-  // const { store, notionApi } = configureNotionStore({ client })
-  // const dispatch = store.dispatch;
-
-  // async function getUsers() {
-  //     const spaceId = "a99691de-ae21-4802-bd1d-9cb351aaa53c"
-  //     const response = await dispatch(notionApi.endpoints.getRecentPageVisits.initiate({userId, spaceId}));
-  //     console.log(response);
-  //     console.log(store.getState())
-  // }
-
-  // getUsers();
 })();
-// const token = getCookie({ name: "token_v2" }).then((value) => value);
-// const userId = getCookie({ name: "notion_user_id" }).then((value) => value);
 
 async function getRecentCollections({ spaceId, userId }) {
   const response = await client.getRecentPageVisits({ spaceId, userId });
@@ -98,11 +75,23 @@ async function getSpaces() {
 }
 
 async function getUser() {
-  const userId = await getCookie({ name: "notion_user_id" });
+  let userId = "";
   const users = await getUsers();
+  const result = await browser.storage.local.get("notion_user");
+
+  if ("notion_user" in result) {
+    userId = result.notion_user;
+  } else {
+    userId = await getCookie({ name: "notion_user_id" });
+  }
+
   if (!userId || !users) {
     return { error: { name: "NOT_LOGGED_IN" } };
   }
+  if (!(userId in users)) {
+    return { error: { name: "USER_NOT_FOUND" } };
+  }
+
   return users[userId];
 }
 
@@ -119,6 +108,17 @@ async function getSpace() {
     return spaces[spaceIds[0]];
   }
   return spaces[result.notion_space];
+}
+
+async function setSpace({ userId, spaceId }) {
+  if (!spaceId) {
+    return { error: { name: `provide spaceId` } };
+  }
+  await browser.storage.local.set({
+    notion_space: spaceId,
+    notion_user: userId,
+  });
+  return { success: true };
 }
 
 async function getCollection({ id, spaceId }) {
@@ -200,6 +200,7 @@ const handler = {
   getUsers,
   getUser,
   getSpace,
+  setSpace,
   getRecentCollections,
   getCollection,
   createPageInCollection,
@@ -224,19 +225,18 @@ async function handleMessage({ action, payload }) {
 
 browser.runtime.onMessage.addListener(
   ({ action, payload }, sender, sendResponse) => {
-    // console.log(action, props);
-    console.log(action, payload);
     if (handler.hasOwnProperty(action)) {
-      console.log(action, payload, "handler found");
       handleMessage({ action, payload })
         .then((v) => sendResponse(v.error ? v : { data: v }))
         .catch((error) => {
-          console.log(error)
+          console.error(error);
           sendResponse({ error: error.message, internal: true });
         });
       // keep messaging channel open (hack for Chromium)
       // on Firefox promises can be returned directly
       return true;
     }
+    sendResponse({ error: "unknown action" });
+    return true;
   }
 );
