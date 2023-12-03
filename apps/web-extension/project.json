@@ -29,12 +29,12 @@
       "configurations": {
         "development": {
           "mode": "development",
-          "outputPath": "build/apps/web-extension/development"
+          "outputPath": "build/apps/web-extension/development",
+          "sourcemap": true
         },
         "production": {
           "mode": "production",
-          "outputPath": "build/apps/web-extension/production",
-          "sourcemap": true
+          "outputPath": "build/apps/web-extension/production"
         }
       }
     },

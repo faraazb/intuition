@@ -19,8 +19,7 @@ export const Spaces = () => {
   const handleSpaceChange = (event, spaceId, userId) => {
     event.preventDefault();
     if (currentSpace.id !== spaceId) {
-      console.log("Change space triggered by ", userId, " to ", spaceId);
-      setSpace({ userId, spaceId })
+      setSpace({ userId, spaceId });
     }
   };
 
