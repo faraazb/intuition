@@ -5,6 +5,7 @@ const browser = chrome;
 const sendMessage = async ({ action, payload }) => {
   try {
     const response = await browser.runtime.sendMessage({ action, payload });
+    console.log(response, action);
     return response;
   } catch (error) {
     console.error("Intuition:", error);
@@ -12,11 +13,24 @@ const sendMessage = async ({ action, payload }) => {
   }
 };
 
-const sendQueryMessage = () => sendMessage;
+const sendQueryMessage = retry(
+  async ({ action, payload }) => {
+    const response = await sendMessage({ action, payload });
+
+    if (response.error?.data && response.error.data.errorId) {
+      retry.fail(response.error);
+    }
+
+    return response;
+  },
+  {
+    maxRetries: 5,
+  }
+);
 
 export const background = createApi({
   reducerPath: "notion",
-  baseQuery: retry(sendMessage),
+  baseQuery: sendQueryMessage,
   tagTypes: ["Space"],
   endpoints: (build) => ({
     getUser: build.query({

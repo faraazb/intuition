@@ -36,9 +36,24 @@ function useDebounce(value, delay) {
 export const Home = () => {
   const navigate = useNavigate();
 
-  const { data: users, isSuccess: isUsersSuccess } = useGetUsersQuery();
-  const { data: space, isSuccess: isSpaceSuccess } = useGetSpaceQuery();
-  const { data: user, isSuccess: isUserSuccess } = useGetUserQuery();
+  const {
+    data: space,
+    error: spaceError,
+    isSuccess: isSpaceSuccess,
+    isError: isSpaceError,
+  } = useGetSpaceQuery();
+  const { data: users, isSuccess: isUsersSuccess } = useGetUsersQuery(
+    {},
+    {
+      skip: !isSpaceSuccess,
+    }
+  );
+  const { data: user, isSuccess: isUserSuccess } = useGetUserQuery(
+    {},
+    {
+      skip: !isSpaceSuccess,
+    }
+  );
   const { data: recentCollections, isSuccess: isRecentCollectionSuccess } =
     useGetRecentCollectionsQuery(
       {
@@ -49,6 +64,12 @@ export const Home = () => {
         skip: !isUserSuccess || !isSpaceSuccess,
       }
     );
+
+  useEffect(() => {
+    if (isSpaceError && spaceError?.data?.name === "UnauthorizedError") {
+      navigate("/login");
+    }
+  }, [isSpaceError]);
 
   const [collectionsQuery, setCollectionsQuery] = useState("");
   const collectionsQueryDebounced = useDebounce(collectionsQuery, 500);
@@ -123,7 +144,10 @@ export const Home = () => {
         <div className="search-bar">
           <div className="search-input">
             <SearchIcon className="icon" />
-            <input placeholder="Search.." onChange={setSearchCollectionsQuery}></input>
+            <input
+              placeholder="Search.."
+              onChange={setSearchCollectionsQuery}
+            ></input>
           </div>
         </div>
       </div>

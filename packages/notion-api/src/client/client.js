@@ -16,7 +16,7 @@ export class NotionClient {
     this.client = ky.create({
       prefixUrl: BASE_URL,
       headers: {
-        "Accept": "*/*",
+        Accept: "*/*",
         "x-notion-active-user-header": userId,
         "Content-Type": "application/json",
       },
@@ -41,9 +41,24 @@ export class NotionClient {
     if ("getSpaces" in this.cache) {
       return this.cache.getSpaces;
     }
-    const response = await this.client("getSpaces").json();
-    this.cache.getSpaces = response;
-    return response;
+    try {
+      const response = await this.client("getSpaces");
+      const body = await response.json();
+
+      if (!response.ok) {
+        console.log("we reach here", response);
+        throw new NotionClientError(body);
+      }
+
+      this.cache.getSpaces = response;
+      return body;
+    } catch (error) {
+      if (error.name === "HTTPError") {
+        const errorResponse = await error.response.json();
+        throw new NotionClientError(errorResponse, error);
+      }
+      throw error;
+    }
   }
 
   async getCollection({ id, spaceId }) {
@@ -85,7 +100,7 @@ export class NotionClient {
     const response = await this.client("saveTransactions", {
       json: body,
     });
-    
+
     if (!response.ok) {
       throw new NotionClientError({ response });
     }

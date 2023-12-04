@@ -227,18 +227,23 @@ browser.runtime.onMessage.addListener(
   ({ action, payload }, sender, sendResponse) => {
     if (handler.hasOwnProperty(action)) {
       handleMessage({ action, payload })
-        .then((v) => sendResponse(v.error ? v : { data: v }))
+        .then((v) => {
+          console.log(action, v);
+          sendResponse(v.error ? v : { data: v });
+        })
         .catch((error) => {
-          console.error(error);
           sendResponse({
-            error: { message: error.message },
-            internal: true,
+            error: {
+              message: error.message,
+              data: error?.response,
+              internal: error.name !== "NotionClientError",
+            },
           });
         });
       // keep messaging channel open (hack for Chromium)
       // on Firefox promises can be returned directly
       return true;
     }
-    sendResponse({ error: { message: "unknown action" } });
+    sendResponse({ error: { message: "no handler found for action" } });
   }
 );
