@@ -49,25 +49,32 @@ const settingsSlice = createSlice({
       };
     },
   },
-  extraReducers: {
-    [fetchThemeFromExtensionLocalStorage.fulfilled]: (state, action) => {
-      const { title, value } = action.payload;
-      state.theme = {
-        ...state.theme,
-        fetchStatus: "success",
-        title,
-        value,
-      };
-    },
-    [fetchThemeFromExtensionLocalStorage.rejected]: (state, action) => {
-      const { title, value } = action.payload;
-      state.theme = {
-        ...state.theme,
-        fetchStatus: "failed",
-        title,
-        value,
-      };
-    },
+  extraReducers: (builder) => {
+    builder
+      .addCase(
+        fetchThemeFromExtensionLocalStorage.fulfilled,
+        (state, action) => {
+          const { title, value } = action.payload;
+          state.theme = {
+            ...state.theme,
+            fetchStatus: "success",
+            title,
+            value,
+          };
+        }
+      )
+      .addCase(
+        fetchThemeFromExtensionLocalStorage.rejected,
+        (state, action) => {
+          const { title, value } = action.payload;
+          state.theme = {
+            ...state.theme,
+            fetchStatus: "failed",
+            title,
+            value,
+          };
+        }
+      );
   },
 });
 
