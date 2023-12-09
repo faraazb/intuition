@@ -24,7 +24,7 @@ export const Collection = () => {
     useGetCollectionQuery(
       {
         id,
-        spaceId: space.id,
+        spaceId: space?.id,
       },
       { skip: !isSpaceSuccess }
     );

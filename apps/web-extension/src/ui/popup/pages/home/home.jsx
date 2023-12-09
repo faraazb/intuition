@@ -15,6 +15,7 @@ import {
   useSearchCollectionsQuery,
   useGetUserQuery,
   useGetUsersQuery,
+  useIsLoggedInQuery,
 } from "../../store/api/notion";
 
 function useDebounce(value, delay) {
@@ -36,22 +37,29 @@ function useDebounce(value, delay) {
 export const Home = () => {
   const navigate = useNavigate();
 
+  const { data: isLoggedIn, isSuccess: isLoggedInSuccess } =
+    useIsLoggedInQuery();
   const {
     data: space,
     error: spaceError,
     isSuccess: isSpaceSuccess,
     isError: isSpaceError,
-  } = useGetSpaceQuery();
+  } = useGetSpaceQuery(
+    {},
+    {
+      skip: !isLoggedInSuccess || isLoggedIn === false,
+    }
+  );
   const { data: users, isSuccess: isUsersSuccess } = useGetUsersQuery(
     {},
     {
-      skip: !isSpaceSuccess,
+      skip: !isLoggedInSuccess || isLoggedIn === false,
     }
   );
   const { data: user, isSuccess: isUserSuccess } = useGetUserQuery(
     {},
     {
-      skip: !isSpaceSuccess,
+      skip: !isLoggedInSuccess || isLoggedIn === false,
     }
   );
   const { data: recentCollections, isSuccess: isRecentCollectionSuccess } =
@@ -64,12 +72,6 @@ export const Home = () => {
         skip: !isUserSuccess || !isSpaceSuccess,
       }
     );
-
-  useEffect(() => {
-    if (isSpaceError && spaceError?.data?.name === "UnauthorizedError") {
-      navigate("/login");
-    }
-  }, [isSpaceError]);
 
   const [collectionsQuery, setCollectionsQuery] = useState("");
   const collectionsQueryDebounced = useDebounce(collectionsQuery, 500);
@@ -89,6 +91,26 @@ export const Home = () => {
     const query = event.target.value;
     setCollectionsQuery(query);
   };
+
+  // if a user logs out when the service worker is active
+  // the user id is still persisted till the service worker
+  // becomes inactive. However, the user would be redirected
+  // to the login page and additionally any requests would result
+  // in 'UnauthorizedError' due to missing 'token_v2'
+  useEffect(() => {
+    // navigate to login info page if not logged in
+    if (isLoggedIn === false) {
+      navigate("/login");
+    }
+  }, [isLoggedIn]);
+
+  useEffect(() => {
+    // navigate to login info page if user is unauthorized
+    // this should not get triggered, but keeping as a safety guard
+    if (isSpaceError && spaceError?.data?.name === "UnauthorizedError") {
+      navigate("/login");
+    }
+  }, [isSpaceError]);
 
   // returns a URL to an SVG twemoji using unicode value, unused as we directly use the font from Mozilla
   // const getIconSrc = (icon) => {

@@ -27,14 +27,31 @@ export class NotionClient {
     this.cache = {};
   }
 
+  async getClientError(error) {
+    if (error.name === "HTTPError") {
+      const errorResponse = await error.response.json();
+      return NotionClientError(errorResponse, error);
+    }
+    return error;
+  }
+
   async getRecentPageVisits({ spaceId, userId }) {
-    const response = await this.client("getRecentPageVisits", {
-      json: {
-        spaceId,
-        userId,
-      },
-    }).json();
-    return response;
+    try {
+      const response = await this.client("getRecentPageVisits", {
+        json: {
+          spaceId,
+          userId,
+        },
+      });
+      const body = await response.json();
+
+      if (!response.ok) {
+        throw new NotionClientError(body);
+      }
+      return body;
+    } catch (error) {
+      throw this.getClientError(error);
+    }
   }
 
   async getSpaces() {
@@ -46,101 +63,113 @@ export class NotionClient {
       const body = await response.json();
 
       if (!response.ok) {
-        console.log("we reach here", response);
         throw new NotionClientError(body);
       }
 
-      this.cache.getSpaces = response;
+      this.cache.getSpaces = body;
       return body;
     } catch (error) {
-      if (error.name === "HTTPError") {
-        const errorResponse = await error.response.json();
-        throw new NotionClientError(errorResponse, error);
-      }
-      throw error;
+      throw this.getClientError(error);
     }
   }
 
   async getCollection({ id, spaceId }) {
-    const body = {
-      requests: [
-        {
-          pointer: {
-            id,
-            spaceId,
-            table: "collection",
+    try {
+      const body = {
+        requests: [
+          {
+            pointer: {
+              id,
+              spaceId,
+              table: "collection",
+            },
+            version: -1,
           },
-          version: -1,
-        },
-      ],
-    };
-    const response = await this.client("syncRecordValues", {
-      json: body,
-    }).json();
-    return response;
+        ],
+      };
+      const response = await this.client("syncRecordValues", {
+        json: body,
+      });
+      const responseBody = await response.json();
+
+      if (!response.ok) {
+        throw new NotionClientError(body);
+      }
+      return responseBody;
+    } catch (error) {
+      throw this.getClientError(error);
+    }
   }
 
   async createPageInCollection({ userId, spaceId, collectionId, properties }) {
-    const time = new Date().valueOf();
+    try {
+      const time = new Date().valueOf();
 
-    const page = { properties, time };
+      const page = { properties, time };
 
-    const body = {
-      requestId: v4(),
-      transactions: [
-        Transactions.createPageInCollection({
-          userId,
-          spaceId,
-          collectionId,
-          page,
-        }),
-      ],
-    };
+      const body = {
+        requestId: v4(),
+        transactions: [
+          Transactions.createPageInCollection({
+            userId,
+            spaceId,
+            collectionId,
+            page,
+          }),
+        ],
+      };
 
-    const response = await this.client("saveTransactions", {
-      json: body,
-    });
+      const response = await this.client("saveTransactions", {
+        json: body,
+      });
 
-    if (!response.ok) {
-      throw new NotionClientError({ response });
+      if (!response.ok) {
+        throw new NotionClientError({ response });
+      }
+
+      return await response.json();
+    } catch (error) {
+      throw this.getClientError(error);
     }
-
-    return await response.json();
   }
 
   async searchCollections({ query, spaceId, limit = 20 }) {
-    const body = {
-      type: "CollectionsInSpace",
-      query,
-      spaceId,
-      limit,
-      filters: {
-        isDeletedOnly: false,
-        excludeTemplates: true,
-        navigableBlockContentOnly: true,
-        requireEditPermissions: true,
-        includePublicPagesWithoutExplicitAccess: false,
-        ancestors: [],
-        createdBy: [],
-        editedBy: [],
-        lastEditedTime: {},
-        createdTime: {},
-        inTeams: [],
-      },
-      sort: {
-        field: "relevance",
-      },
-      source: "quick_find_input_change",
-    };
+    try {
+      const body = {
+        type: "CollectionsInSpace",
+        query,
+        spaceId,
+        limit,
+        filters: {
+          isDeletedOnly: false,
+          excludeTemplates: true,
+          navigableBlockContentOnly: true,
+          requireEditPermissions: true,
+          includePublicPagesWithoutExplicitAccess: false,
+          ancestors: [],
+          createdBy: [],
+          editedBy: [],
+          lastEditedTime: {},
+          createdTime: {},
+          inTeams: [],
+        },
+        sort: {
+          field: "relevance",
+        },
+        source: "quick_find_input_change",
+      };
 
-    const response = await this.client("search", {
-      json: body,
-    });
+      const response = await this.client("search", {
+        json: body,
+      });
 
-    if (!response.ok) {
-      throw new NotionClientError({ response });
+      if (!response.ok) {
+        throw new NotionClientError({ response });
+      }
+
+      return await response.json();
+    } catch (error) {
+      throw this.getClientError(error);
     }
-
-    return await response.json();
   }
 }

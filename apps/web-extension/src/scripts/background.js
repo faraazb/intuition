@@ -28,10 +28,17 @@ async function getCookie({ name, ...rest }) {
 let client;
 
 (async function () {
-  const token = await getCookie({ name: "token_v2" });
   const userId = await getCookie({ name: "notion_user_id" });
-  client = new NotionClient({ token, userId });
+  client = new NotionClient({ userId });
 })();
+
+async function isLoggedIn() {
+  const token = await getCookie({ name: "token_v2" });
+  if (token) {
+    return true;
+  }
+  return false;
+}
 
 async function getRecentCollections({ spaceId, userId }) {
   const response = await client.getRecentPageVisits({ spaceId, userId });
@@ -205,7 +212,7 @@ const handler = {
   getCollection,
   createPageInCollection,
   searchCollections,
-  getCookie,
+  isLoggedIn,
 };
 
 async function handleMessage({ action, payload }) {
@@ -228,7 +235,6 @@ browser.runtime.onMessage.addListener(
     if (handler.hasOwnProperty(action)) {
       handleMessage({ action, payload })
         .then((v) => {
-          console.log(action, v);
           sendResponse(v.error ? v : { data: v });
         })
         .catch((error) => {

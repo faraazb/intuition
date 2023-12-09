@@ -11,7 +11,7 @@ import {
   selectTheme,
 } from "./store/slices/settings";
 
-const Content = () => {
+export const Popup = () => {
   const dispatch = useDispatch();
   const theme = useSelector(selectTheme);
 
@@ -24,10 +24,6 @@ const Content = () => {
       <RouterProvider router={router} />
     </div>
   );
-};
-
-export const Popup = () => {
-  return <Content />;
 };
 
 ReactDOM.createRoot(document.getElementById("app")).render(

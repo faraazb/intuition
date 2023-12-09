@@ -5,7 +5,6 @@ const browser = chrome;
 const sendMessage = async ({ action, payload }) => {
   try {
     const response = await browser.runtime.sendMessage({ action, payload });
-    console.log(response, action);
     return response;
   } catch (error) {
     console.error("Intuition:", error);
@@ -16,11 +15,9 @@ const sendMessage = async ({ action, payload }) => {
 const sendQueryMessage = retry(
   async ({ action, payload }) => {
     const response = await sendMessage({ action, payload });
-
     if (response.error?.data && response.error.data.errorId) {
       retry.fail(response.error);
     }
-
     return response;
   },
   {
@@ -33,6 +30,9 @@ export const background = createApi({
   baseQuery: sendQueryMessage,
   tagTypes: ["Space"],
   endpoints: (build) => ({
+    isLoggedIn: build.query({
+      query: () => ({ action: "isLoggedIn" }),
+    }),
     getUser: build.query({
       query: () => ({ action: "getUser" }),
     }),
@@ -81,6 +81,7 @@ export const background = createApi({
 });
 
 export const {
+  useIsLoggedInQuery,
   useGetUsersQuery,
   useGetUserQuery,
   useGetSpacesQuery,
