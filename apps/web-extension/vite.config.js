@@ -1,13 +1,14 @@
-import { defineConfig, loadEnv } from "vite";
+import { resolve } from "path";
+import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import webExtension from "@samrum/vite-plugin-web-extension";
 import { nxViteTsPaths } from "@nx/vite/plugins/nx-tsconfig-paths.plugin";
-import { resolve } from "path";
+import { injectReactDevTools } from "./inject-react-devtools";
 import { getManifest } from "./src/manifest";
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
-  const env = loadEnv(mode, process.cwd(), "");
+  // const env = loadEnv(mode, process.cwd(), "");
 
   return {
     resolve: {
@@ -24,8 +25,9 @@ export default defineConfig(({ mode }) => {
       }),
       nxViteTsPaths(),
       webExtension({
-        manifest: getManifest("chrome")
+        manifest: getManifest("chrome"),
       }),
+      mode !== "production" && injectReactDevTools(),
     ],
   };
 });
