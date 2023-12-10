@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import "./home.scss";
 // import browser from "webextension-polyfill";
@@ -16,6 +16,7 @@ import {
   useGetUserQuery,
   useGetUsersQuery,
   useIsLoggedInQuery,
+  useIsOnboardedQuery,
 } from "../../store/api/notion";
 
 function useDebounce(value, delay) {
@@ -36,9 +37,15 @@ function useDebounce(value, delay) {
 
 export const Home = () => {
   const navigate = useNavigate();
+  const { state } = useLocation();
 
-  const { data: isLoggedIn, isSuccess: isLoggedInSuccess } =
-    useIsLoggedInQuery();
+  const { data: isOnboarded, isSuccess: isOnboardedSuccess } =
+    useIsOnboardedQuery();
+
+  const { data: isLoggedIn, isSuccess: isLoggedInSuccess } = useIsLoggedInQuery(
+    {},
+    { skip: !isOnboardedSuccess }
+  );
   const {
     data: space,
     error: spaceError,
@@ -91,6 +98,18 @@ export const Home = () => {
     const query = event.target.value;
     setCollectionsQuery(query);
   };
+
+  // const justOnboarded = typeof state !== "undefined" && (state || state.onboarded)
+
+  useEffect(() => {
+    if (
+      isOnboardedSuccess &&
+      isOnboarded === false &&
+      (state === null || state.onboarded !== true)
+    ) {
+      navigate("/onboarding");
+    }
+  }, [isOnboardedSuccess, isOnboarded, state]);
 
   // if a user logs out when the service worker is active
   // the user id is still persisted till the service worker

@@ -1,30 +1,14 @@
-import { useEffect } from "react";
-import "./onboarding.scss";
 import { useNavigate } from "react-router-dom";
-
-const browser = chrome;
+import { useSetOnboardedMutation } from "../../store/api/notion";
+import "./onboarding.scss";
 
 export const Onboarding = () => {
   const navigate = useNavigate();
+  const [setMutation, { isSuccess }] = useSetOnboardedMutation();
 
   const authorize = async () => {
-    try {
-      await browser.storage.local.set({ onboarding: true });
-      let cookie = await browser.runtime.sendMessage({
-        action: "getCookie",
-        payload: { name: "notion_user_id" },
-      });
-      if (cookie?.data) {
-        navigate("/");
-      } else {
-        navigate("/login");
-      }
-    } catch (error) {
-      console.error(
-        "Onboarding: Failed to set onboarding key in storage",
-        error
-      );
-    }
+    setMutation({ onboarded: true });
+    navigate("/", { state: { onboarded: true } });
   };
 
   return (

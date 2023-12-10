@@ -11,6 +11,7 @@ chrome.runtime.onInstalled.addListener(() => {
     if (!result.theme) {
       chrome.storage.local.set({
         theme: { title: "Use system setting", value: "" },
+        onboarded: true,
       });
     }
   });
@@ -31,6 +32,19 @@ let client;
   const userId = await getCookie({ name: "notion_user_id" });
   client = new NotionClient({ userId });
 })();
+
+async function setOnboarded() {
+  await browser.storage.local.set({ onboarded: true });
+  return { success: true };
+}
+
+async function isOnboarded() {
+  const result = await browser.storage.local.get("onboarded");
+  if ("onboarded" in result) {
+    return result.onboarded;
+  }
+  return false;
+}
 
 async function isLoggedIn() {
   const token = await getCookie({ name: "token_v2" });
@@ -213,6 +227,8 @@ const handler = {
   createPageInCollection,
   searchCollections,
   isLoggedIn,
+  isOnboarded,
+  setOnboarded,
 };
 
 async function handleMessage({ action, payload }) {

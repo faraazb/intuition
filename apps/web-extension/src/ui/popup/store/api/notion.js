@@ -30,6 +30,17 @@ export const background = createApi({
   baseQuery: sendQueryMessage,
   tagTypes: ["Space"],
   endpoints: (build) => ({
+    isOnboarded: build.query({
+      query: () => ({ action: "isOnboarded" }),
+      providesTags: ["Onboarded"],
+    }),
+    setOnboarded: build.mutation({
+      query: ({ onboarded }) => ({
+        action: "setOnboarded",
+        payload: { onboarded },
+      }),
+      invalidatesTags: ["Onboarded"],
+    }),
     isLoggedIn: build.query({
       query: () => ({ action: "isLoggedIn" }),
     }),
@@ -82,6 +93,8 @@ export const background = createApi({
 
 export const {
   useIsLoggedInQuery,
+  useIsOnboardedQuery,
+  useSetOnboardedMutation,
   useGetUsersQuery,
   useGetUserQuery,
   useGetSpacesQuery,
